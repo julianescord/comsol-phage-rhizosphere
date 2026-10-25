@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite the paper by Dosmar et al. (2021) and this repository as specified below."
 title: "FEM model of controlled phage release in the rhizosphere"
-version: "1.0.0"
+version: "0.3.0"
 date-released: "2026-07-30"
 license: "MIT"
-repository-code: "https://github.com/JuliAnOrs/comsol"
+repository-code: "https://github.com/julianescord/comsol-phage-rhizosphere"
 keywords:
   - COMSOL
   - finite element method
@@ -21,7 +21,7 @@ authors:
 preferred-citation:
   type: software
   title: "FEM model of controlled phage release in the rhizosphere"
-  version: "1.0.0"
+  version: "0.3.0"
   year: 2026
   publisher: GitHub
   authors:

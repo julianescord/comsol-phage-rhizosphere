@@ -41,7 +41,7 @@ Dentro de `scripts/` hay dos categorías, reconocibles por el nombre:
 - **Herramientas de reporte vía IA externa** (`analisis_datos_deepseek.py`,
   `analisis_nano.py`) — no simulan nada; leen resultados ya generados y le
   piden a un modelo de lenguaje (Llama 3.1 70B vía API de NVIDIA) que
-  redacte texto/HTML a partir de ellos. Ver detalle abajo.
+  redacte texto/HTML a partir de ellos.
 
 Algunos documentos de `docs/` (`especificacion_tecnica.md`,
 `ruta_aprendizaje.md`, `conexion.md`) son **material histórico**: reflejan el
@@ -73,7 +73,7 @@ lo detecta automáticamente vía JPype.
 | R | **Replicación del fago: infección fago–Ralstonia (Lotka-Volterra)** | ✅ verificada |
 | 4 | Flujo de agua y advección (campo uniforme impuesto) | ✅ verificada (con salvedad geométrica) |
 | F+R | **Combinado: flujo + replicación (2 interfaces acopladas)** | ✅ verificada |
-| 5 | 3D, múltiples beads, heterogeneidad, calibración | pendiente |
+| 5 | 3D, múltiples beads, heterogeneidad, calibración | pendiente — ver [issues](https://github.com/julianescord/comsol-phage-rhizosphere/issues) |
 
 > **Reordenamiento:** la captación radicular (Etapa 4 en el plan original) se
 > adelantó a la 3ª posición, y el flujo de agua pasó a la 4ª. Motivo: el
@@ -99,6 +99,17 @@ una vez y se agota, tras lo cual el patógeno rebrota; la liberación sostenida
 mantiene la presión del fago sobre ese rebrote. Esto da, por primera vez en el
 proyecto, un argumento cuantitativo a favor de las micro-beads de liberación
 sostenida.
+
+Al añadir **flujo de agua** (modelo combinado F+R) la conclusión no se
+invierte, se **refuerza**: la bead de 300 µm gana con cualquier Péclet y la
+carga acumulada baja de 75 % (sin flujo) a 57 % (Pe = 20). La liberación
+sostenida es además más robusta al flujo, porque repone el fago que el agua
+barre fuera del dominio.
+
+> **Alcance de esta conclusión.** Los parámetros cinéticos son placeholders de
+> literatura genérica y aún no hay análisis de sensibilidad ni validación
+> experimental. La dirección del hallazgo es una hipótesis del modelo, no un
+> resultado confirmado. Ver [Pendientes y limitaciones](#pendientes-y-limitaciones).
 
 ### Etapa 1 — reproducir
 
@@ -189,8 +200,8 @@ inactiva dentro de la bead antes de salir; para 1000 µm/2.2e-15,
 τ_dif = a²/D ≈ 5000 d ≫ los 14 d simulados), pero la liberación rápida **no**,
 porque una vez en el suelo el fago decae al mismo ritmo k. El compromiso que
 premiaría una liberación sostenida solo aparece cuando se añade un proceso que
-la aproveche — captación radicular (Etapa 4) o replicación con umbral
-(Etapa 5). Hasta entonces, el diseño óptimo es el vehículo más pequeño y
+la aproveche — captación radicular (Etapa 3) o replicación del fago
+(etapa R). Hasta entonces, el diseño óptimo es el vehículo más pequeño y
 difusivo posible.
 
 ### Etapa 3 (raíz) — reproducir
@@ -337,8 +348,10 @@ Dos de tres métricas —incluida la robusta— favorecen **beads grandes de
 liberación lenta**. Esto **invierte** la conclusión de las Etapas 2–3. Nota de
 honestidad: la conclusión depende de la métrica temporal elegida, y con estos
 placeholders el biocontrol es solo parcial (la carga baja a ~72 %, no se
-erradica). Lo robusto es la **dirección**: la replicación da valor a la
-sostenibilidad que el transporte pasivo no daba.
+erradica). Lo que se espera robusto es la **dirección** (la replicación da
+valor a la sostenibilidad que el transporte pasivo no daba), pero eso aún no
+está demostrado con un análisis de sensibilidad
+([#2](https://github.com/julianescord/comsol-phage-rhizosphere/issues/2)).
 
 ### Etapa 4 (flujo de agua) — reproducir
 
@@ -448,3 +461,28 @@ barrer `r_bead` solo reescala el eje temporal y no discrimina nada. El barrido
 solo aporta información cuando se rompe la auto-similitud — es decir, en la
 Etapa 2 en adelante: D_bead ≠ D_suelo, una distancia fija a la raíz, o una
 constante de inactivación fija.
+
+## Pendientes y limitaciones
+
+Seguimiento en los [issues](https://github.com/julianescord/comsol-phage-rhizosphere/issues).
+
+| Pendiente | Issue |
+|---|---|
+| Análisis de sensibilidad de la conclusión central a los parámetros cinéticos | [#2](https://github.com/julianescord/comsol-phage-rhizosphere/issues/2) |
+| Calibración de parámetros con datos del sistema fago–*Ralstonia*–alginato | [#3](https://github.com/julianescord/comsol-phage-rhizosphere/issues/3) |
+| Validación experimental (curva de liberación in vitro vs. modelo) | [#4](https://github.com/julianescord/comsol-phage-rhizosphere/issues/4) |
+| Etapa 5: 3D, múltiples beads, heterogeneidad — requisitos de cómputo en [`compute_donation.md`](docs/summary/compute_donation.md) | [#5](https://github.com/julianescord/comsol-phage-rhizosphere/issues/5) |
+| Transpiración convergente hacia la raíz (Darcy/Richards) | [#6](https://github.com/julianescord/comsol-phage-rhizosphere/issues/6) |
+| Degradación de la bead, reinfección, resistencia del hospedador | [#7](https://github.com/julianescord/comsol-phage-rhizosphere/issues/7) |
+
+Limitaciones actuales: toda la verificación es numérica (soluciones
+analíticas, invariantes, ODE de referencia); geometría 2D axisimétrica con una
+sola bead; flujo de agua uniforme impuesto, no resuelto.
+
+## Licencia y cita
+
+Código bajo licencia [MIT](LICENSE). Para citar este trabajo usa
+[`CITATION.cff`](CITATION.cff) (GitHub muestra el botón *Cite this
+repository*) y cita también a Dosmar et al. (2021). Versión actual:
+[v0.3.0](https://github.com/julianescord/comsol-phage-rhizosphere/releases/tag/v0.3.0)
+(pre-release).
