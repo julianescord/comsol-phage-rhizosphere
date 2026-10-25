@@ -73,7 +73,7 @@ lo detecta automáticamente vía JPype.
 | R | **Replicación del fago: infección fago–Ralstonia (Lotka-Volterra)** | ✅ verificada |
 | 4 | Flujo de agua y advección (campo uniforme impuesto) | ✅ verificada (con salvedad geométrica) |
 | F+R | **Combinado: flujo + replicación (2 interfaces acopladas)** | ✅ verificada |
-| 5 | 3D, múltiples beads, heterogeneidad, calibración | pendiente |
+| 5 | 3D, múltiples beads, heterogeneidad, calibración | pendiente — ver [issues](https://github.com/julianescord/comsol-phage-rhizosphere/issues) |
 
 > **Reordenamiento:** la captación radicular (Etapa 4 en el plan original) se
 > adelantó a la 3ª posición, y el flujo de agua pasó a la 4ª. Motivo: el
@@ -189,8 +189,8 @@ inactiva dentro de la bead antes de salir; para 1000 µm/2.2e-15,
 τ_dif = a²/D ≈ 5000 d ≫ los 14 d simulados), pero la liberación rápida **no**,
 porque una vez en el suelo el fago decae al mismo ritmo k. El compromiso que
 premiaría una liberación sostenida solo aparece cuando se añade un proceso que
-la aproveche — captación radicular (Etapa 4) o replicación con umbral
-(Etapa 5). Hasta entonces, el diseño óptimo es el vehículo más pequeño y
+la aproveche — captación radicular (Etapa 3) o replicación del fago
+(etapa R). Hasta entonces, el diseño óptimo es el vehículo más pequeño y
 difusivo posible.
 
 ### Etapa 3 (raíz) — reproducir
