@@ -41,7 +41,7 @@ Dentro de `scripts/` hay dos categorías, reconocibles por el nombre:
 - **Herramientas de reporte vía IA externa** (`analisis_datos_deepseek.py`,
   `analisis_nano.py`) — no simulan nada; leen resultados ya generados y le
   piden a un modelo de lenguaje (Llama 3.1 70B vía API de NVIDIA) que
-  redacte texto/HTML a partir de ellos. Ver detalle abajo.
+  redacte texto/HTML a partir de ellos.
 
 Algunos documentos de `docs/` (`especificacion_tecnica.md`,
 `ruta_aprendizaje.md`, `conexion.md`) son **material histórico**: reflejan el
@@ -478,52 +478,6 @@ Seguimiento en los [issues](https://github.com/julianescord/comsol-phage-rhizosp
 Limitaciones actuales: toda la verificación es numérica (soluciones
 analíticas, invariantes, ODE de referencia); geometría 2D axisimétrica con una
 sola bead; flujo de agua uniforme impuesto, no resuelto.
-
-## Herramientas de reporte vía IA externa
-
-Dos scripts usan la API de NVIDIA (Llama 3.1 70B) para **redactar texto** a
-partir de datos que ya existen. Ninguno ejecuta COMSOL ni resuelve física —
-es importante no confundirlos con el pipeline de simulación de arriba.
-
-```bash
-venv/bin/python scripts/analisis_datos_deepseek.py   # reporte HTML global desde models/*.csv
-venv/bin/python scripts/analisis_nano.py             # sección "escala nano" (analítica, no FEM)
-```
-
-- **`analisis_datos_deepseek.py`** — concatena todos los CSV de `models/` y le
-  pide a Llama que redacte un reporte HTML completo (metodología + análisis
-  por etapa + discusión), insertando `<img src="archivo.png">` cuando existe
-  el PNG correspondiente. Pensado para una primera pasada rápida y barata;
-  para el informe final con la narrativa completa (por qué se reordenaron las
-  etapas, qué bugs se encontraron y cómo, qué métrica es frágil y cuál
-  robusta) se usó en cambio `docs/summary/resumen.html`, escrito directamente
-  con el contexto de todo el proyecto — un LLM viendo solo los CSV no tiene
-  forma de reconstruir ese razonamiento.
-- **`analisis_nano.py`** — la escala nanométrica del vehículo (~100 nm)
-  **nunca se simuló en COMSOL** (ver nota en `docs/summary/resumen.html`,
-  tabla de variables de entrada): es física y numéricamente trivial
-  (tiempo característico a²/D ~ milisegundos) y el vehículo no cabría al
-  fago jumbo. Este script calcula esos tiempos analíticamente y le pide a
-  Llama que redacte la sección de discusión correspondiente
-  (`models/analisis_nano.html`, no versionado).
-
-Ambos requieren `deepseekk_api_key` en `.env` (ver abajo) y el paquete
-`openai` (cliente genérico, apuntando al endpoint de NVIDIA). Usan el
-`venv/` de la **raíz** (no `mcp_server/venv`): no necesitan `mph` ni COMSOL,
-pero sí `openai`+`python-dotenv`, que viven ahí.
-
-```bash
-venv/bin/pip install openai python-dotenv   # si el venv raiz no los tiene aun
-```
-
-## Configuración local
-
-`.env` (no versionado) contiene la clave de API usada por los scripts de
-reporte de la sección anterior:
-
-```
-deepseekk_api_key=...
-```
 
 ## Licencia y cita
 
